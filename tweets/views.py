@@ -1,26 +1,27 @@
 from django.http import HttpResponse
-from django.template import loader
+from django.shortcuts import render, get_object_or_404
 
 from .models import Tweet
 
 
 def index(request):
     all_tweets = Tweet.objects.all()
-    template = loader.get_template('tweets/index.html')
     context = {
         'tweet_list': all_tweets,
     }
-    return HttpResponse(template.render(context, request))
+    return render(request, 'tweets/index.html', context)
 
 
 def tweet(request, tweet_id):
-    t = Tweet.objects.get(pk=tweet_id)
-    return HttpResponse("You're looking at tweet {tweet_id} with text {text}".format(tweet_id=tweet_id, text=t.text))
+    context = {
+        'tweet': get_object_or_404(Tweet, pk=tweet_id),
+    }
+    return render(request, 'tweets/tweet.html', context)
 
 
-def follow(request, user_id):
-    return HttpResponse("You're trying to follow user %s" % user_id)
+def follow(request, username):
+    return HttpResponse("You're trying to follow user %s" % username)
 
 
-def user(request, user_id):
-    return HttpResponse("You're looking at the details of user %s" % user_id)
+def user(request, username):
+    return HttpResponse("You're looking at the details of user %s" % username)
