@@ -1,0 +1,6 @@
+You're looking at the details of user {{ user.username }}
+
+<form action="{%  url 'tweets:user_follow' user.username %}" method="post">
+    {% csrf_token %}
+    <input type="submit" value="Follow" />
+</form>

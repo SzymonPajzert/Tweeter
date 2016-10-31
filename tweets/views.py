@@ -1,13 +1,14 @@
-from django.http import HttpResponse
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
+from django.urls import reverse
 
+from django.contrib.auth.models import User
 from .models import Tweet
 
 
 def index(request):
-    all_tweets = Tweet.objects.all()
     context = {
-        'tweet_list': all_tweets,
+        'tweet_list': Tweet.objects.all(),
     }
     return render(request, 'tweets/index.html', context)
 
@@ -20,8 +21,9 @@ def tweet(request, tweet_id):
 
 
 def follow(request, username):
-    return HttpResponse("You're trying to follow user %s" % username)
+    print("Trying to follow %s" % username)
+    return HttpResponseRedirect(reverse('tweets:user', args=(username,)))
 
 
 def user(request, username):
-    return HttpResponse("You're looking at the details of user %s" % username)
+    return render(request, 'tweets/user.html', {'user': get_object_or_404(User, username=username)})
