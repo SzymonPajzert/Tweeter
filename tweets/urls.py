@@ -4,10 +4,13 @@ from . import views
 
 app_name='tweets'
 urlpatterns = [
-    url(r'^$', views.index, name='index'),
+    url(r'^$', views.IndexView.as_view(), name='index'),
 
-    url(r'^user/(?P<username>[a-zA-Z]+)/$', views.user, name='user'),
-    url(r'^user/(?P<username>[a-zA-Z]+)/follow/$', views.follow, name='user_follow'),
+    url(r'^user/(?P<pk>[0-9]+)/$', views.UserView.as_view(), name='user'),
+    url(r'^user/(?P<pk>[0-9]+)/follow/$', views.follow, name='user_follow'),
 
-    url(r'^tweet/(?P<tweet_id>[0-9]+)/$', views.tweet, name='tweet'),
+    url(r'^tweet/(?P<pk>[0-9]+)/$', views.TweetView.as_view(), name='tweet'),
+
+    url(r'^login/$', views.login, name='login'),
+    url(r'^register/$', views.register, name='register')
 ]
