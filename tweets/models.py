@@ -5,9 +5,14 @@ from django.contrib.auth.models import User
 
 
 class Tweet(models.Model):
+    from django.utils import timezone
+
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     text = models.CharField(max_length=140)
-    date_published = models.DateTimeField('date_published')
+    date_published = models.DateTimeField('date_published', default=timezone.now)
+
+    def __unicode__(self):
+        return self.text
 
 
 class Relationship(models.Model):
