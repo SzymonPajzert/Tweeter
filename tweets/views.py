@@ -1,7 +1,10 @@
+from django.conf import settings
 from django.http import HttpResponseRedirect, HttpResponse
+from django.shortcuts import redirect
 from django.urls import reverse
 from django.views import generic
 
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from .models import Tweet
 
@@ -23,13 +26,10 @@ class UserView(generic.DetailView):
     template_name = 'tweets/user.html'
 
 
+@login_required
 def follow(request, pk):
-    if request.user.is_authenticated:
-        print("Trying to follow user with id {pk} logged as {username}".format(pk=pk, username=request.user.username))
-        return HttpResponseRedirect(reverse('tweets:user', args=(pk,)))
-    else:
-        print("Trying to follow user with id %s" % pk)
-        return HttpResponseRedirect(reverse('tweets:login'))
+    print("Trying to follow user with id {pk} logged as {username}".format(pk=pk, username=request.user.username))
+    return HttpResponseRedirect(reverse('tweets:user', args=(pk,)))
 
 
 def login(request):
