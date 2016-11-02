@@ -2,9 +2,11 @@
     <ul>
     {% for tweet in tweet_list %}
         <li><a href="{% url 'tweets:tweet' tweet.id %}">{{ tweet.text }}</a> from user
-            <a href="{% url 'tweets:user' tweet.owner.pk %}">{{ tweet.owner.username }}</a></li>
+            <a href="{% url 'tweets:user_detail' tweet.owner.pk %}">{{ tweet.owner.username }}</a></li>
     {% endfor %}
     </ul>
 {% else %}
     <p>No tweets are available.</p>
 {% endif %}
+
+<a href="{% url 'tweets:user_list' %}">All users</a>

@@ -10,9 +10,18 @@ from .models import Tweet, Profile
 
 class IndexView(generic.ListView):
     template_name = 'tweets/index.html'
+    context_object_name = 'tweet_list'
 
     def get_queryset(self):
-        return Tweet.objects.all()
+        return Tweet.objects.filter(owner__profile__in=self.request.user.profile.followed.all())
+
+
+class UserListView(generic.ListView):
+    template_name = 'tweets/user_list.html'
+    context_object_name = 'user_list'
+
+    def get_queryset(self):
+        return User.objects.all()
 
 
 class TweetView(generic.DetailView):
@@ -40,7 +49,7 @@ def set_follow(start_following):
         else:
             request.user.profile.followed.remove(followed_user)
 
-        return HttpResponseRedirect(reverse('tweets:user', args=(pk,)))
+        return HttpResponseRedirect(reverse('tweets:user_detail', args=(pk,)))
 
     return follow
 
