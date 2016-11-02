@@ -1,12 +1,11 @@
-from django.conf import settings
-from django.http import HttpResponseRedirect, HttpResponse
-from django.shortcuts import redirect
+from django.http import HttpResponseRedirect
+from django.shortcuts import redirect, get_object_or_404, render
 from django.urls import reverse
 from django.views import generic
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from .models import Tweet
+from .models import Tweet, Profile
 
 
 class IndexView(generic.ListView):
@@ -21,21 +20,29 @@ class TweetView(generic.DetailView):
     template_name = 'tweets/tweet.html'
 
 
-class UserView(generic.DetailView):
-    model = User
-    template_name = 'tweets/user.html'
+def user_view(request, pk):
+    user = get_object_or_404(User, pk=pk)
+    following = user.profile in request.user.profile.followed.all()
+    print("Following value is {following}".format(following=following))
+    return render(request, 'tweets/user.html', {'user': user, 'following': following})
 
 
-@login_required
-def follow(request, pk):
-    print("Trying to follow user with id {pk} logged as {username}".format(pk=pk, username=request.user.username))
-    return HttpResponseRedirect(reverse('tweets:user', args=(pk,)))
+def set_follow(start_following):
+    @login_required
+    def follow(request, pk):
+        action = "follow" if start_following else "unfollow"
+        print("Trying to {action} user with id {pk} logged as {username}".
+              format(pk=pk, username=request.user.username, action=action))
+
+        followed_user = get_object_or_404(Profile, pk=pk)
+        if start_following:
+            request.user.profile.followed.add(followed_user)
+        else:
+            request.user.profile.followed.remove(followed_user)
+
+        return HttpResponseRedirect(reverse('tweets:user', args=(pk,)))
+
+    return follow
 
 
-def login(request):
-    return HttpResponse("Login")
-
-
-def register(request):
-    return HttpResponse("Register")
 

@@ -1,6 +1,16 @@
 You're looking at the details of user {{ user.username }}
 
-<form action="{%  url 'tweets:user_follow' user.pk %}" method="post">
-    {% csrf_token %}
-    <input type="submit" value="Follow" />
+{% if request.user != user %}
+
+    {% if following %}
+        <form action="{%  url 'tweets:user_unfollow' user.pk %}" method="post">
+        {% csrf_token %}
+        <input type="submit" value="Unfollow" />
+    {% else %}
+        <form action="{%  url 'tweets:user_follow' user.pk %}" method="post">
+        {% csrf_token %}
+        <input type="submit" value="Follow" />
+    {% endif %}
+
 </form>
+{% endif %}
