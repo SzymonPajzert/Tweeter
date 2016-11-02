@@ -5,7 +5,9 @@ from django.views import generic
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+
 from .models import Tweet, Profile
+from .forms import TweetForm
 
 
 class IndexView(generic.ListView):
@@ -54,5 +56,18 @@ def set_follow(start_following):
 
     return follow
 
+
+@login_required
+def create_tweet(request):
+    if request.method == 'POST':
+        form = TweetForm(request.POST)
+        if form.is_valid():
+            Tweet.objects.create(owner=request.user, text=form.cleaned_data.get('tweet_text'))
+            return redirect('tweets:index')
+
+    else:
+        form = TweetForm()
+
+    return render(request, 'tweets/create_tweet.html', {'form': form})
 
 
