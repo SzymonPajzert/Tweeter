@@ -13,7 +13,8 @@ class IndexView(generic.ListView):
     context_object_name = 'tweet_list'
 
     def get_queryset(self):
-        return Tweet.objects.filter(owner__profile__in=self.request.user.profile.followed.all())
+        return Tweet.objects.filter(owner__profile__in=self.request.user.profile.followed.all()).\
+            order_by('-date_published')[:10]
 
 
 class UserListView(generic.ListView):
