@@ -1,13 +1,22 @@
-{% if tweet_list %}
-    <ul>
-    {% for tweet in tweet_list %}
-        <li><a href="{% url 'tweets:tweet' tweet.id %}">{{ tweet.text }}</a> from user
-            <a href="{% url 'tweets:user_detail' tweet.owner.pk %}">{{ tweet.owner.username }}</a></li>
-    {% endfor %}
-    </ul>
-{% else %}
-    <p>No tweets are available.</p>
-{% endif %}
+{% extends "base.html" %}
+{% load static %}
 
-<a href="{% url 'tweets:user_list' %}">All users</a><br/>
-<a href="{% url 'tweets:create_tweet' %}">Create tweet</a>
+{% block title %}All tweets{% endblock %}
+
+{% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% static "tweets/css/index.css" %}" />{% endblock %}
+
+{% block content %}
+    {% if tweet_list %}
+        <div id="tweet_list">
+        {% for tweet in tweet_list %}
+            <li><a href="{% url 'tweets:tweet' tweet.id %}">{{ tweet.text }}</a> from user
+                <a href="{% url 'tweets:user_detail' tweet.owner.pk %}">{{ tweet.owner.username }}</a></li>
+        {% endfor %}
+        </div>
+    {% else %}
+        <div id="no_tweet_list">
+            <p>No tweets are available.</p>
+            <p><a href="{% url 'tweets:create_tweet' %}">Create one yourself</a></p>
+        </div>
+    {% endif %}
+{% endblock %}

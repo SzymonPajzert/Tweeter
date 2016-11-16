@@ -1,0 +1,25 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" type="text/css" href="{% block stylesheet %}{% static "css/base.css" %}{% endblock %}" />
+    {% block extrastyle %}{% endblock %}
+</head>
+<body>
+    <div id="banner">
+        <a href="{% url 'tweets:index' %}">
+            <img src="{% static "images/sitelogo.png" %}" alt="Logo"/>
+        </a>
+        <a href="{% url 'tweets:user_list' %}">All users</a><br/>
+        <a href="{% url 'tweets:create_tweet' %}">Create tweet</a>
+    </div>
+
+    <div id="content">
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>
