@@ -1,11 +1,4 @@
 #no_tweet_list {
     width: 400px;
     height: 200px;
-
-    border: 1px solid gainsboro;
-    margin: 10px auto auto;
-
-    background: #ffffff;
-
-    text-align: center;
 }

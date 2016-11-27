@@ -20,6 +20,7 @@ class Tweet(models.Model):
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     followed = models.ManyToManyField("self", symmetrical=False)
+    identifier = models.CharField(max_length=60, blank=False)
 
     def __unicode__(self):
         result = "{user} following: ".format(user=self.user)

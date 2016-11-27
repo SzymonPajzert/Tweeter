@@ -3,14 +3,20 @@
 
 {% block title %}User list{% endblock %}
 
+{% block extrastyle %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static "tweets/css/base.css" %}" />
+    <link rel="stylesheet" type="text/css" href="{% static "tweets/css/user_list.css" %}" />
+{% endblock %}
+
 {% block content %}
 
     {% if user_list %}
-        <ul>
         {% for user in user_list %}
-            <li><a href="{% url 'tweets:user_detail' user.pk %}">{{ user.username }}</a></li>
+            <div class="block user_list_elt">
+                <a href="{% url 'tweets:user_detail' user.pk %}">{{ user.username }}</a>
+            </div>
         {% endfor %}
-        </ul>
     {% else %}
         <p>No tweets are available.</p>
     {% endif %}

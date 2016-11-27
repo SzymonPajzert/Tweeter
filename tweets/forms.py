@@ -1,5 +1,9 @@
 from django import forms
 
+from .models import Tweet
+
 
 class TweetForm(forms.ModelForm):
-    tweet_text = forms.CharField(label='Text', max_length=140)
+    class Meta:
+        model = Tweet
+        fields = ['text']

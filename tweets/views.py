@@ -1,6 +1,8 @@
+from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, get_object_or_404, render
 from django.urls import reverse
+from django.utils.decorators import method_decorator
 from django.views import generic
 
 from django.contrib.auth.decorators import login_required
@@ -26,10 +28,21 @@ class UserListView(generic.ListView):
     def get_queryset(self):
         return User.objects.all()
 
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(UserListView, self).dispatch(request, *args, **kwargs)
+
 
 class TweetView(generic.DetailView):
     model = Tweet
     template_name = 'tweets/tweet.html'
+
+
+def stub_view(name):
+    def view(request):
+        return HttpResponse("You're in {name}".format(name=name), content_type="text/plain")
+
+    return view
 
 
 def user_view(request, pk):
@@ -62,7 +75,7 @@ def create_tweet(request):
     if request.method == 'POST':
         form = TweetForm(request.POST)
         if form.is_valid():
-            Tweet.objects.create(owner=request.user, text=form.cleaned_data.get('tweet_text'))
+            Tweet.objects.create(owner=request.user, text=form.cleaned_data.get('text'))
             return redirect('tweets:index')
 
     else:
