@@ -20,21 +20,9 @@ class Tweet(models.Model):
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     followed = models.ManyToManyField("self", symmetrical=False)
-    identifier = models.CharField(max_length=60, blank=False)
 
     def __unicode__(self):
         result = "{user} following: ".format(user=self.user)
         for followed in self.followed.all():
             result = result + ", " + followed.user.username
         return result
-
-
-@receiver(post_save, sender=User)
-def create_user_profile(sender, instance, created, **kwargs):
-    if created:
-        Profile.objects.create(user=instance)
-
-
-@receiver(post_save, sender=User)
-def save_user_profile(sender, instance, created, **kwargs):
-    instance.profile.save()

@@ -1,3 +1,4 @@
+from django.contrib.auth import login
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, get_object_or_404, render
@@ -9,7 +10,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 
 from .models import Tweet, Profile
-from .forms import TweetForm
+from .forms import TweetForm, UserForm
 
 
 class IndexView(generic.ListView):
@@ -82,5 +83,22 @@ def create_tweet(request):
         form = TweetForm()
 
     return render(request, 'tweets/create_tweet.html', {'form': form})
+
+
+def signup(request):
+    if request.method == "POST":
+        form = UserForm(request.POST)
+        if form.is_valid():
+            new_user = User.objects.create_user(**form.cleaned_data)
+            new_user.save()
+            Profile.objects.create(user=new_user)
+
+            login(user=new_user, request=request)
+            # redirect, or however you want to get to the main view
+            return redirect('tweets:index')
+    else:
+        form = UserForm()
+
+    return render(request, 'tweets/signup.html', {'form': form, })
 
 

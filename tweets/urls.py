@@ -10,8 +10,11 @@ urlpatterns = [
 
     url(r'^login/$', auth_views.login,
         {'template_name': 'tweets/login.html'}, name='login'),
+
     url(r'logout/$', auth_views.logout,
         {'template_name': 'tweets/logout.html'}, name='logout'),
+
+    url(r'signup/$', views.signup, name='signup'),
 
     url(r'^user/all/$', views.UserListView.as_view(), name='user_list'),
     url(r'^user/(?P<pk>[0-9]+)/$', views.user_view, name='user_detail'),

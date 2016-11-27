@@ -18,24 +18,29 @@
                     {{ form.username.errors }}
                     {{ form.username.label_tag }} {{ form.username }}
                 </div>
+
+                <div class="form-row">
+                    {{ form.email.errors }}
+                    {{ form.email.label_tag }} {{ form.email }}
+                </div>
+
                 <div class="form-row">
                     {{ form.password.errors }}
                     {{ form.password.label_tag }} {{ form.password }}
                 <input type="hidden" name="next" value="{{ next }}" />
                 </div>
 
-                {% url 'admin_password_reset' as password_reset_url %}
-                {% if password_reset_url %}
-                    <div class="password-reset-link">
-                        <a href="{{ password_reset_url }}">Forgotten your password or username?</a>
-                    </div>
-                {% endif %}
-
                 <div class="submit-row">
-                    <label>&nbsp;</label><input type="submit" value='Log in' />
+                    <label>&nbsp;</label><input type="submit" value='Sign up' />
                 </div>
             </form>
         </div>
     </div>
 </div>
 {% endblock %}
+
+<form method="post" action="">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Create new user account" />
+</form>
