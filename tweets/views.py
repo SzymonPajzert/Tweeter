@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.contrib.auth import login
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
@@ -18,7 +19,10 @@ class IndexView(generic.ListView):
     context_object_name = 'tweet_list'
 
     def get_queryset(self):
-        return Tweet.objects.filter(owner__profile__in=self.request.user.profile.followed.all()).\
+        return Tweet.objects.filter(
+            Q(owner__profile__in=self.request.user.profile.followed.all())
+            | Q(owner__profile=self.request.user.profile)
+        ).\
             order_by('-date_published')[:10]
 
 

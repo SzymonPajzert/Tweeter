@@ -13,10 +13,17 @@
     {% if tweet_list %}
         <div id="tweet_list">
         {% for tweet in tweet_list %}
-            <div class="block">
-                <a href="{% url 'tweets:tweet' tweet.id %}">{{ tweet.text }}</a> from user
-                <a href="{% url 'tweets:user_detail' tweet.owner.pk %}">{{ tweet.owner.username }}</a>
-            </div>
+            {% if tweet.owner == request.user %}
+                <div class="block domestic">
+                    <a href="{% url 'tweets:tweet' tweet.id %}">{{ tweet.text }}</a> from
+                    <a href="{% url 'tweets:user_detail' tweet.owner.pk %}">you</a>
+                </div>
+            {% else %}
+                <div class="block foreign">
+                    <a href="{% url 'tweets:tweet' tweet.id %}">{{ tweet.text }}</a> from user
+                    <a href="{% url 'tweets:user_detail' tweet.owner.pk %}">{{ tweet.owner.username }}</a>
+                </div>
+            {% endif %}
         {% endfor %}
         </div>
     {% else %}
