@@ -50,8 +50,12 @@ def stub_view(name):
     return view
 
 
-def user_view(request, pk):
-    user = get_object_or_404(User, pk=pk)
+def user_view(request, pk=None):
+    if pk:
+        user = get_object_or_404(User, pk=pk)
+    else:
+        user = request.user
+
     following = user.profile in request.user.profile.followed.all()
     print("Following value is {following}".format(following=following))
     return render(request, 'tweets/user.html', {'user': user, 'following': following})
@@ -70,7 +74,10 @@ def set_follow(start_following):
         else:
             request.user.profile.followed.remove(followed_user)
 
-        return HttpResponseRedirect(reverse('tweets:user_detail', args=(pk,)))
+        html = "<html><body>You have successfully change following options, you hacker.</body></html>"
+        return HttpResponse(html)
+            
+        # return HttpResponseRedirect(reverse('tweets:user_detail', args=(pk,)))
 
     return follow
 

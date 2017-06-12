@@ -19,8 +19,7 @@ urlpatterns = [
     url(r'^user/all/$', views.UserListView.as_view(), name='user_list'),
     url(r'^user/(?P<pk>[0-9]+)/$', views.user_view, name='user_detail'),
 
-    # TODO implement view
-    url(r'^user/me/$', login_required(views.stub_view('user_me')), name='user_me'),
+    url(r'^user/me/$', views.user_view, name='user_me'),
 
     # TODO implement form
     # TODO implement view

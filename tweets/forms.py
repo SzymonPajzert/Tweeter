@@ -14,8 +14,13 @@ class UserForm(forms.ModelForm):
         }
 
 
-class TweetForm(forms.ModelForm):
+class TweetForm(forms.ModelForm):    
     class Meta:
         model = Tweet
         fields = ['text']
+        widgets= {
+            'text': forms.Textarea(attrs={
+                'class' : 'form-control',
+                'rows' : 3}),
+            }
 

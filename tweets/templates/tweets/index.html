@@ -14,20 +14,28 @@
         <div id="tweet_list">
         {% for tweet in tweet_list %}
             {% if tweet.owner == request.user %}
-                <div class="block domestic">
-                    <a href="{% url 'tweets:tweet' tweet.id %}">{{ tweet.text }}</a> from
-                    <a href="{% url 'tweets:user_detail' tweet.owner.pk %}">you</a>
+                <div class="panel panel-default">
+		            <div class="panel-heading tweet-head">
+					    <a href="{% url 'tweets:user_me' %}">you</a>
+                    </div>
+					<div class="panel-body tweet-body">
+                        <a href="{% url 'tweets:tweet' tweet.id %}">{{ tweet.text }}</a>
+					</div>
                 </div>
             {% else %}
-                <div class="block foreign">
-                    <a href="{% url 'tweets:tweet' tweet.id %}">{{ tweet.text }}</a> from user
-                    <a href="{% url 'tweets:user_detail' tweet.owner.pk %}">{{ tweet.owner.username }}</a>
+                <div class="panel panel-primary">
+				    <div class="panel-heading tweet-head">
+				      <a style="color: inherit" href="{% url 'tweets:user_detail' tweet.owner.pk %}">{{ tweet.owner.username }}</a>
+					</div>  
+                    <div class="panel-body tweet-body">
+                        <a href="{% url 'tweets:tweet' tweet.id %}">{{ tweet.text }}</a>
+					</div>
                 </div>
             {% endif %}
         {% endfor %}
         </div>
     {% else %}
-        <div class="invisible" id="no_tweet_list">
+        <div id="no_tweet_list">
             <p>No tweets are available.</p>
             <p><a href="{% url 'tweets:user_list' %}">Start following someone</a></p>
             <p>or <a href="{% url 'tweets:create_tweet' %}">create tweet yourself</a></p>

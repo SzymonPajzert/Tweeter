@@ -10,13 +10,15 @@
 {% endblock %}
 
 {% block content %}
-    <div class="block" id="create_tweet">
-        <form action="{% url 'tweets:create_tweet' %}" method="post">
+    <div class="panel panel-primary">
+	  <div class="panel-heading">Create tweet</div>
+        <form class="panel-body" action="{% url 'tweets:create_tweet' %}" method="post">
             {% csrf_token %}
 
             {{ form.text }}
 
-            <input id="submit_button" type="submit" value="Create" />
+            <input class="btn pull-right" id="submit_button" type="submit" value="Create" />
         </form>
+		</div>
     </div>
 {% endblock %}

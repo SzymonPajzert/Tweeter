@@ -2,39 +2,106 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
+  <meta charset="UTF-8">
+  
     <title>{% block title %}{% endblock %}</title>
 
     <!-- Favicon -->
     <link rel="shortcut icon" href="{% static "images/favicon.ico" %}" />
 
     <!-- Stylesheets -->
-    <link rel="stylesheet" type="text/css" href="{% block stylesheet %}{% static "css/base.css" %}{% endblock %}" />
 
+	<link rel="stylesheet" type="text/css" href="{% block stylesheet %}{% static "css/narrow.css" %}{% endblock %}" />
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+	
+<script type="text/javascript">
+
+  function switchText(text) {
+    if(text == "Unfollow") {
+      return "Follow";
+    } else {
+      return "Unfollow";
+    }
+  }
+
+  function switchCommand(text) {
+    if(text == "unfollow") {
+      return "follow";
+    } else {
+      return "unfollow";
+    }
+  }
+
+  function getButtonClass(text) {
+    if(text == "unfollow") {
+      return "";
+    } else {
+      return "active";
+    }
+  }
+  
+  
+  function changeFollow(userNumber, command, buttonId) {
+				
+    var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
+
+    var xhttp = new XMLHttpRequest();
+
+    xhttp.open("POST", "/user/" + userNumber + "/" + command + "/", true);
+
+    xhttp.setRequestHeader("X-CSRFToken", csrftoken);
+
+    xhttp.onreadystatechange = function() {
+      if(this.readyState == 4 && this.status == 200) {
+        var button = document.getElementById(buttonId);
+        var buttonText = switchText(button.innerHTML);
+        var newCommand = switchCommand(command);
+
+        button.innerHTML = buttonText;
+        button.setAttribute("onclick", "changeFollow(" + userNumber + ",'" + newCommand + "','" + buttonId + "')");
+
+        button.setAttribute("class", "btn " + getButtonClass(command));
+      }	
+    };
+				  
+    xhttp.send();
+    
+
+  }
+</script>
+	
     {% block extrastyle %}{% endblock %}
 </head>
 <body>
-    <div id="banner">
-        <a href="{% url 'tweets:index' %}">
-            <img src="{% static "images/sitelogo.png" %}" alt="Logo"/>
-        </a>
+  <div class="container">
+  <div class="header clearfix">
 
-        <div id="links">
-            <a href="{% url 'tweets:user_list' %}">All users</a><br/>
-            <a href="{% url 'tweets:create_tweet' %}">Create tweet</a>
+        <nav>
+		  <ul class="nav nav-pills pull-right">
+            <li role="presentation"><a href="{% url 'tweets:user_list' %}">All users</a></li>
+            <li role="presentation"><a href="{% url 'tweets:create_tweet' %}">Create tweet</a></li>
             {% if request.user.is_authenticated %}
-                You're logged as <a href="{% url 'tweets:user_me' %}">{{ request.user.username }}</a>
-                <a href="{% url 'tweets:logout' %}">Log out</a>
+                <li role="presentation"><a href="{% url 'tweets:user_me' %}">{{ request.user.username }}</a></li>
+                <li role="presentation"><a href="{% url 'tweets:logout' %}">Log out</a></li>
             {% else %}
-                <a href="{% url 'tweets:login' %}">Log in</a>
-                <a href="{% url 'tweets:signup' %}">Sign up</a>
-            {% endif %}
-        </div>
+                <li role="presentation"><a href="{% url 'tweets:login' %}">Log in</a></li>
+                <li role="presentation"><a href="{% url 'tweets:signup' %}">Sign up</a></li>
+			{% endif %}
+          </ul>	
+        </nav>
+
+		<h3 class="text-muted"><a href="{% url 'tweets:index' %}">Tweeter</a></h3>
 
     </div>
 
-    <div id="content">
+    <div id="content" class="jumbotron">
         {% block content %}{% endblock %}
     </div>
+	</div>
 </body>
 </html>

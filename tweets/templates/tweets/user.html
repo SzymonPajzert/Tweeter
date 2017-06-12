@@ -1,6 +1,12 @@
 {% extends "base.html" %}
 {% load static %}
 
+{% block extrascripts %}
+{{ block.super }} 
+
+
+{% endblock %}
+
 {% block title %}User information{% endblock %}
 
 {% block content %}
@@ -9,17 +15,14 @@
 
     {% if request.user != user %}
 
-        {% if following %}
-            <form action="{%  url 'tweets:user_unfollow' user.pk %}" method="post">
-            {% csrf_token %}
-            <input type="submit" value="Unfollow" />
-        {% else %}
-            <form action="{%  url 'tweets:user_follow' user.pk %}" method="post">
-            {% csrf_token %}
-            <input type="submit" value="Follow" />
-        {% endif %}
-
-    </form>
+        {% csrf_token %}
+        <button id="follow_button" type="button" class="btn"
+		{% if following %}
+			onclick="changeFollow({{ user.id }},'unfollow','follow_button')">Unfollow</button>
+		{% else %}
+			onclick="changeFollow({{ user.id }},'follow','follow_button')">Follow</button>
+		{% endif %}
+		
     {% endif %}
 
 {% endblock %}

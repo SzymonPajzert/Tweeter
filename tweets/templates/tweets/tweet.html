@@ -4,6 +4,26 @@
 {% block title %}Tweet information{% endblock %}
 
 {% block content %}
-You're looking at tweet {{ tweet.id }} with text {{ tweet.text }} from user <a href="{% url 'tweets:user_detail' tweet.owner.pk %}">{{ tweet.owner.username }}</a>
+
+{% if tweet.owner == request.user %}
+                <div class="panel panel-default">
+		            <div class="panel-heading tweet-head">
+					    <a pull-right href="{% url 'tweets:user_me' %}">you</a>
+                    </div>
+					<div class="panel-body tweet-body">
+                        <a href="{% url 'tweets:tweet' tweet.id %}">{{ tweet.text }}</a>
+					</div>
+                </div>
+            {% else %}
+                <div class="panel panel-primary">
+				    <div class="panel-heading tweet-head">
+				      <a style="color: #fff" href="{% url 'tweets:user_detail' tweet.owner.pk %}">{{ tweet.owner.username }}</a>
+					</div>  
+                    <div class="panel-body tweet-body">
+                        <a href="{% url 'tweets:tweet' tweet.id %}">{{ tweet.text }}</a>
+					</div>
+                </div>
+            {% endif %}
+
 {% endblock %}
 
